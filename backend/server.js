@@ -12,16 +12,18 @@ const port = process.env.PORT || 4000
 connectDB()
 connectCloudinary()
 
+
 //middlewares 
 app.use(express.json())
 app.use(cors())
+
 
 //api endpoints
 app.use('/api/admin',adminRouter)
 // localhost:4000/api/admin/add-doctor
 
 app.get('/',(req,res)=>{
-    res.send('hello rupak')
+    res.send('API WORKING MEDIQUEUE')
 })
 
 app.listen(port, ()=> console.log("Server Started",port))
