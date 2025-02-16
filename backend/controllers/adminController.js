@@ -1,5 +1,5 @@
 import validator from "validator"
-import bycrypt from 'bcrypt'
+import bcrypt from 'bcrypt'
 import {v2 as cloudinary} from "cloudinary"
 import doctorModel from "../models/doctorModel.js"
 import jwt from 'jsonwebtoken'
@@ -79,5 +79,15 @@ const adminLogin = async (req, res) => {
     }
 }
 
+// API to get all doctors lis for admin panel
+const allDoctors = async (req,res)=>{
+    try {
+        const doctors = await doctorModel.find({}).select('-password')
+        res.json({success:true,doctors})
+    } catch (error) {
+        console.log(error)
+        res.json({success:false,message:error.message})
+    }
+}
 
-export {addDoctor,adminLogin} 
+export {addDoctor,adminLogin ,allDoctors} 

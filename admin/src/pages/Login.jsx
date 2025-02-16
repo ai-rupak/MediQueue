@@ -11,14 +11,14 @@ const Login = () => {
 
   const {setAtoken,backendUrl} = useContext(AdminContext)
   const onSubmitHandler = async  (event)=>{
-    // event.preventDefault();
+    //event.preventDefault();
     try {
         if(state == 'Admin'){
             const {data} = await axios.post(`${backendUrl}/api/admin/login`,{email,password})
             if(data.success){
                 localStorage.setItem('aToken',data.token)
                 setAtoken(data.token)
-                toast.success("Admin Login Succesful!")
+                return toast.success("Admin Login Succesful!")
             }
             else{
                 toast.error(data.message)
@@ -45,7 +45,7 @@ const Login = () => {
           <p>Password</p>
           <input onChange={(e)=>setPassword(e.target.value)} value={password} className="border border-[#DADADA] rounded w-full p-2 mt-1" type="password" required />
         </div>
-        <button className="bg-primary text-black w-full py-2 rounded-md text-base">Login</button>
+        <button type="submit" className="bg-primary text-black w-full py-2 rounded-md text-base">Login</button>
         {
             state === 'Admin' 
             ?<p>Doctor Login? <span className="text-primary underline cursor-pointer" onClick={()=>setState('Doctor')}>Click here</span></p> 
