@@ -19,16 +19,30 @@ connectCloudinary()
 app.use(express.json())
 // app.use(cors())
 
+const allowedOrigins = [
+  'https://mediqueue-seven.vercel.app',
+  'https://medi-queue-t5g2.vercel.app',
+  'http://localhost:5173',
+];
+
 app.use(cors({
-  origin: 'https://mediqueue-seven.vercel.app',
+  origin: (origin, callback) => {
+    // allow requests with no origin (like mobile apps or curl)
+    if (!origin) return callback(null, true);
+    if (allowedOrigins.includes(origin)) {
+      return callback(null, true);
+    } else {
+      return callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true,
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
-    allowedHeaders: [
-      "Content-Type",
-      "Authorization",
-      "X-Requested-With",
-      "Accept",
-    ],
+  allowedHeaders: [
+    "Content-Type",
+    "Authorization",
+    "X-Requested-With",
+    "Accept",
+  ],
 }));
 
 //api endpoints
