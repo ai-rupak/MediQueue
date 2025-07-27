@@ -35,3 +35,5 @@ app.get('/',(req,res)=>{
 })
 
 // app.listen(port, ()=> console.log("Server Started",port))
+
+export default app
