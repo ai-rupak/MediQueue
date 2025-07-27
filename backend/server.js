@@ -34,4 +34,4 @@ app.get('/',(req,res)=>{
     res.send('API WORKING MEDIQUEUE')
 })
 
-app.listen(port, ()=> console.log("Server Started",port))
+// app.listen(port, ()=> console.log("Server Started",port))
