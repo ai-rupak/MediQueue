@@ -20,7 +20,7 @@ app.use(express.json())
 app.use(cors())
 
 app.use(cors({
-  origin: 'https://medi-queue-mu.vercel.app',
+  origin: 'https://mediqueue-seven.vercel.app/',
   credentials: true,
 }));
 
