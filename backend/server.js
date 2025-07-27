@@ -42,6 +42,8 @@ app.use(cors({
     "Authorization",
     "X-Requested-With",
     "Accept",
+    'token'
+    
   ],
 }));
 
