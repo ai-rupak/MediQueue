@@ -2,33 +2,52 @@ import React, { useContext, useState } from "react";
 import { AdminContext } from "../context/AdminContext";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { data } from "react-router-dom";
+import { DoctorContext } from "../context/DoctorContext";
+import {useNavigate} from 'react-router-dom'
 
 const Login = () => {
   const [state, setState] = useState("Admin");
   const [password, setPassword] = useState("");
   const [email,setEmail] = useState("");
+  const navigate = useNavigate();
 
-  const {setAtoken,backendUrl} = useContext(AdminContext)
-  const onSubmitHandler = async  (event)=>{
-    //event.preventDefault();
+  const {setAToken,backendUrl} = useContext(AdminContext)
+  const {dToken,setDToken} = useContext(DoctorContext)
+  const [loading, setLoading] = useState(false);
+
+
+  const onSubmitHandler = async (event)=>{
+    event.preventDefault();
+    setLoading(true);
     try {
         if(state == 'Admin'){
             const {data} = await axios.post(`${backendUrl}/api/admin/login`,{email,password})
             if(data.success){
                 localStorage.setItem('aToken',data.token)
-                setAtoken(data.token)
-                return toast.success("Admin Login Succesful!")
+                setAToken(data.token)
+                navigate('/admin-dashboard')
+                toast.success("Admin Login Succesful!")
             }
             else{
                 toast.error(data.message)
             }
         } else{
-            
-
+          const {data} = await axios.post(`${backendUrl}/api/doctor/login`,{email,password})
+          if(data.success){
+                localStorage.setItem('dToken',data.token)
+                console.log(data.token)
+                setDToken(data.token)
+                navigate('/doctor-dashboard')
+                toast.success("Doctor Login Succesful!")
+            }
+            else{
+                toast.error(data.message)
+            }
         }
     } catch (error) {
-        // toast.error(error.response?.data?.message || "An error occurred during login.");
+        toast.error(error.message );
+    }finally {
+      setLoading(false);
     }
   }
   return (
@@ -45,7 +64,7 @@ const Login = () => {
           <p>Password</p>
           <input onChange={(e)=>setPassword(e.target.value)} value={password} className="border border-[#DADADA] rounded w-full p-2 mt-1" type="password" required />
         </div>
-        <button type="submit" className="bg-primary text-black w-full py-2 rounded-md text-base">Login</button>
+        <button  disabled={loading} type="submit" className="bg-primary text-black w-full py-2 rounded-md text-base">{loading ? "Logging in..." : "Login"}</button>
         {
             state === 'Admin' 
             ?<p>Doctor Login? <span className="text-primary underline cursor-pointer" onClick={()=>setState('Doctor')}>Click here</span></p> 

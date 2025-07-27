@@ -1,6 +1,8 @@
 import React, { useContext, useState } from 'react'
 import { AppContext } from '../context/AppContext'
 import { assets } from '../assets/assets'
+import axios from 'axios'
+import toast from 'react-hot-toast'
 
 const MyProfile = () => {
 
@@ -9,7 +11,31 @@ const MyProfile = () => {
   const [image,setImage] = useState(false)
 
   const updateUserProfileData = async ()=>{
-
+    try {
+      const formData = new FormData()
+      formData.append('userId',userData._id)
+      formData.append('name',userData.name)
+      formData.append('phone',userData.phone)
+      formData.append('address',JSON.stringify(userData.address))
+      formData.append('gender',userData.gender)
+      formData.append('dob',userData.dob)
+      if(image){
+        formData.append('image',image)
+      }
+      const {data} = await axios.post(`${backendUrl}/api/user/update-profile`, formData, {headers:{token}})
+      if(data.success){
+        toast.success(data.message)
+        await loadUserProfileData()
+        setIsEdit(false)
+        setImage(false)
+      }else{
+        toast.error(data.message)
+        console.error(data.message)
+      }
+    }catch (error) {
+      console.log(error)
+      toast.error(error.message)
+    }
   }
 
   return userData && (
@@ -23,7 +49,7 @@ const MyProfile = () => {
           </div>
           <input onChange={(e)=>setImage(e.target.files[0])} type="file" id='image' hidden/>
         </label>
-        :      <img className='w-36 rounded-full' src={userData.image} alt="" />
+        : <img className='w-36 rounded-full' src={userData.image} alt="" />
 
       }
       {
